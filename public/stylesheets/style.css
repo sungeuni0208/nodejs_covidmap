@@ -53,3 +53,41 @@ body {
   font-size: 13px;
   font-weight: normal;
 }
+#current {
+  position: absolute;
+  top: 200px;
+  z-index: 10000;
+  background: white;
+  left: 20px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bolder;
+}
+.pulse {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 0 rgb(255, 0, 0);
+  animation: pulse 1.7s infinite;
+}
+@-webkit-keyframes pulse {
+  /* 시간대별로 애니메이션 어떻게 나갈지 명시 */
+  0% {
+    box-shadow: 0 0 0 0 rgba(204, 49, 44, 0.4);
+    -moz-box-shadow: 0 0 0 0 rgba(204, 49, 44, 0.4);
+    /* firefox에서 적용되도록 moz붙임 */
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(204, 49, 44, 0);
+    -moz-box-shadow: 0 0 0 20px rgba(204, 49, 44, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0px rgba(204, 49, 44, 0.4);
+    -moz-box-shadow: 0 0 0 0px rgba(204, 49, 44, 0.4);
+  }
+}

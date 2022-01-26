@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script type="text/javascript"
     src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ildjthl7y4"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -18,6 +20,7 @@
     <div id="infoTitle">현재 날짜</div>
     <div id="infoContent">2022.01.26</div>
   </div>
+  <div id="current">현재 위치</div>
   <div id="map" style="width:100%;height:100vh;"></div>
   <script type="text/javascript" src="/data/data.js"></script>
   <script>
@@ -86,6 +89,36 @@
         infowindow.close();
       }
     }
+
+    let currentUse=true;
+
+    $('#current').click(()=>{
+      if('geolocation' in navigator){
+        navigator.geolocation.getCurrentPosition(function(position){
+          //위도, 경도 등이 담긴 Position 정보 활용
+          const lat=position.coords.latitude;
+          const lng=position.coords.longitude;
+          const latlng=new naver.maps.LatLng(lat,lng);
+          if(currentUse){
+            marker=new naver.maps.Marker({
+              map:map,
+              position:latlng,
+              icon: {
+                content: '<img class="pulse" draggable="false" unselectable="on" src="https://myfirstmap.s3.ap-northeast-2.amazonaws.com/circle.png">',
+                anchor: new naver.maps.Point(11,11),
+              },
+            });
+            currentUse=false;
+          }
+          map.setZoom(14,false);
+          //zoom레벨, 이동 애니메이션 여부
+          map.panTo(latlng);
+        });
+      }else{
+        //navigator안에 geolocation이 없다면 위치정보 사용 불가능
+        alert('위치정보 사용 불가능');
+      }
+    });
   </script>
 </body>
 
