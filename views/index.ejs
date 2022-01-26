@@ -12,6 +12,7 @@
     src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ildjthl7y4"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=929290d3b6c3094beb2f3ed459ffe6f8&libraries=services"></script>
 </head>
 
 <body>
@@ -19,6 +20,10 @@
   <div id="infoBox">
     <div id="infoTitle">현재 날짜</div>
     <div id="infoContent">2022.01.26</div>
+  </div>
+  <div id="search">
+    <input id="search_input" placeholder="목적지를 입력해주세요" />
+    <button id="search_button">검색</button>
   </div>
   <div id="current">현재 위치</div>
   <div id="map" style="width:100%;height:100vh;"></div>
@@ -119,6 +124,50 @@
         alert('위치정보 사용 불가능');
       }
     });
+
+    let ps=new kakao.maps.services.Places();
+    let search_arr=[];
+
+    $('#search_input').on("keydown",function(e){
+      if(e.keyCode===13){
+        //엔터키 눌렀을때
+        let content=$(this).val();
+        ps.keywordSearch(content, placeSearchCB);
+        //content결과값이 placeSearchCB라는 함수를 통해서 처리됨.
+      }
+    });
+    $('#search_button').on("click",function(e){
+      let content=$("#search_input").val()
+      ps.keywordSearch(content,placeSearchCB);
+    })
+
+    function placeSearchCB(data,status,pagination){
+      //data에는 목적지를 바탕으로 검색한 결과,
+      //status는 카카오 서버에 대한 상태
+      //검색결과가 얼마나 있는지 번호를 통해 알수있음.
+      if(status===kakao.maps.services.Status.OK){
+        let target=data[0];
+        const lat=target.y;
+        const lng=target.x;
+        const latlng=new naver.maps.LatLng(lat,lng);
+        marker=new naver.maps.Marker({
+          position: latlng,
+          map:map
+        });
+        if(search_arr.length==0){
+          search_arr.push(marker);
+        }else{  //이미 마커가 있다면
+          search_arr.push(marker);
+          let pre_marker=search_arr.splice(0,1);
+          //0번째 마커 추출
+          pre_marker[0].setMap(null);
+        }
+        map.setZoom(14,false);
+        map.panTo(latlng);
+      }else{
+        alert("검색결과가 없습니다.");
+      }
+    }
   </script>
 </body>
 
