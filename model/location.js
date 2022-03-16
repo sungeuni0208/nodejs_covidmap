@@ -8,4 +8,4 @@ const locationSchema = new Schema({
     lng: { type: Number, required: true },
     
 });
-module.exports = mongoose.model({ "location": locationSchema });
+module.exports = mongoose.model("location", locationSchema );
